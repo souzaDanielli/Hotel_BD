@@ -5,7 +5,7 @@ cursor = conexao.cursor()
 
 cursor.execute(
     """
-        CREATE TABLE Reserva (
+        CREATE TABLE Quarto (
             num_quarto INTEGER PRIMARY KEY NOT NULL,
             descricao TEXT NOT NULL,
             id_reserva INTEGER NOT NULL,
