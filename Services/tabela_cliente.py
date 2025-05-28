@@ -5,8 +5,8 @@ cursor = conexao.cursor()
 
 cursor.execute(
     '''
-        CREATE TABLE Cliente(
-                cpf INTEGER PRIMARY KEY NOT NULL,
+        CREATE TABLE Cliente_novo(
+                cpf TEXT PRIMARY KEY NOT NULL,
                 nome TEXT NOT NULL,
                 data_nascimento DATE NOT NULL,
                 cidade TEXT,
@@ -14,6 +14,6 @@ cursor.execute(
         );
     '''
 )
-
 cursor.close()
-print("tabela Cliente criada!")
+conexao.close()
+print("Tabela Cliente criada (ou já existia)!")

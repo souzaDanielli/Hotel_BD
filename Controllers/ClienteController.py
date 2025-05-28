@@ -39,13 +39,13 @@ def consultarCliente():
         for item in lista:
             cpf, nome, data_nascimento, cidade, telefone = item
         
-        dados.append({
-            "CPF": cpf,
-            "Nome": nome,
-            "Data de nascimento": data_nascimento,
-            "Cidade": cidade,
-            "Telefone": telefone
-        })
+            dados.append({
+                "Nome": nome,
+                "DataNascimento": data_nascimento,
+                "Cidade": cidade,
+                "Telefone": telefone,
+                "CPF": cpf
+            })
         return dados
     
     except sqlite3.Error as e:
@@ -61,17 +61,16 @@ def alterarCliente(cliente):
     try:
         cursor.execute("""
             UPDATE Cliente
-            SET cpf = ?, nome = ?, data_nascimento = ?, cidade = ?, telefone = ? 
+            SET nome = ?, data_nascimento = ?, cidade = ?, telefone = ? 
             WHERE cpf = ?         
             """,(
-                cliente["CPF"],
                 cliente["Nome"],
-                cliente["Data de nascimento"],
+                cliente["DataNascimento"],
                 cliente["Cidade"],
-                cliente["Telefone"]
+                cliente["Telefone"],
+                cliente["CPF"]
         ))
         conexao.commit()
-        print("Cliente com o CPF {cliente['CPF']} alterado com sucesso!")
     except sqlite3.Error as e:
         print(f"Erro ao alterar Cliente: {e}")
     finally:
