@@ -83,7 +83,7 @@ def excluirCliente(cpf):
     try:
         cursor.execute("DELETE FROM Cliente WHERE cpf = ?", (cpf,))
         conexao.commit()
-        print("Cliente com CPF {cpf} excluído com sucesso!")
+        print("Cliente excluído com sucesso!")
     except sqlite3.Error as e:
         print(f"Erro ao excluir Cliente: {e}")
     finally:

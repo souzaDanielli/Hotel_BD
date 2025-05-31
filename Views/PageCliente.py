@@ -6,7 +6,7 @@ from Models.Cliente import Cliente
 def show_cliente_page():
     st.title('Cadastro de Clientes')
 
-    # Manu de operações para Cliente
+    # Menu de operações para Cliente
     Page_Cliente = st.sidebar.selectbox("Operações", ["Incluir", "Consultar", "Excluir", "Alterar"])
 
     # Incluir cliente
@@ -38,12 +38,11 @@ def show_cliente_page():
         dados = clienteController.consultarCliente()
         if dados:
             st.table(pd.DataFrame(dados))
-            codigo_cpf = st.text_input("CPF do cliente para excluir", min_value = 1)
+            codigo_cpf = st.text_input("CPF do cliente para excluir")
             
             if st.button("Excluir"):
                 clienteController.excluirCliente(codigo_cpf)
                 st.success("Cliente excluído com sucesso!")
-                st.rerun()
             else:
                 st.info("Nenhum cliente cadastrado")
     
@@ -52,7 +51,7 @@ def show_cliente_page():
         dados = clienteController.consultarCliente()
         if dados:
             st.table(pd.DataFrame(dados))
-            codigo_cpf = st.number_input("CPF do cliente para alterar", min_value = 1)
+            codigo_cpf = st.text_input("CPF do cliente para alterar")
             cliente_data = next((c for c in dados if c["CPF"] == codigo_cpf), None)
 
             if cliente_data:
