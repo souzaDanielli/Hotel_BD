@@ -1,9 +1,9 @@
 class Reserva:
     def __init__(self, id, data_entrada, data_saida, cpf_cliente):
-        self.id = id
-        self.data_entrada = data_entrada
-        self.data_saida = data_saida
-        self.cpf_cliente = cpf_cliente
+        self._id = id
+        self._data_entrada = data_entrada
+        self._data_saida = data_saida
+        self._cpf_cliente = cpf_cliente
 
     # id
     def get_id(self):

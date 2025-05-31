@@ -9,7 +9,7 @@ cursor.execute(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             data_entrada DATE NOT NULL,
             data_saida DATE NOT NULL,
-            cpf_cliente INTEGER NOT NULL,
+            cpf_cliente TEXT NOT NULL,
             FOREIGN KEY (cpf_cliente) REFERENCES Cliente(cpf)
         );
     """

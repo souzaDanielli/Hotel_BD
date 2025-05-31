@@ -88,39 +88,3 @@ def excluirCliente(cpf):
         print(f"Erro ao excluir Cliente: {e}")
     finally:
         conexao.close()
-
-# Alterar Reserva
-def alterarReserva(reserva):
-    conexao = conectaBD()
-    cursor = conexao.cursor()
-    try:
-        cursor.execute("""
-            UPDATE Reserva
-            SET data_entrada = ?, data_saida = ?, cpf_cliente = ?, num_quarto = ?
-            WHERE id = ?
-        """, (
-            reserva["Data Entrada"],
-            reserva["Data Saída"],
-            reserva["CPF Cliente"],
-            reserva["Número do Quarto"],
-            reserva["ID"]
-        ))
-        conexao.commit()
-        print(f"Reserva com ID {reserva['ID']} alterada com sucesso!")
-    except sqlite3.Error as e:
-        print(f"Erro ao alterar reserva: {e}")
-    finally:
-        conexao.close()
-
-# Excluir Reserva
-def excluirReserva(id):
-    conexao = conectaBD()
-    cursor = conexao.cursor()
-    try:
-        cursor.execute("DELETE FROM Reserva WHERE id = ?", (id,))
-        conexao.commit()
-        print(f"Reserva com ID {id} excluída com sucesso!")
-    except sqlite3.Error as e:
-        print(f"Erro ao excluir reserva: {e}")
-    finally:
-        conexao.close()
