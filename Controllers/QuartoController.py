@@ -12,7 +12,7 @@ def incluirQuarto(quarto):
     try:
         cursor.execute("""
             INSERT INTO Quarto (num_quarto, descricao)
-            VALUES (?, ?, ?) 
+            VALUES (?, ?) 
         """, (
             quarto.get_num_quarto(),
             quarto.get_descricao(),
@@ -37,8 +37,8 @@ def consultarQuarto():
             num_quarto, descricao = item
 
             dados.append({
-                "Número do Quarto": num_quarto,
-                "Descrição": descricao
+                "Num_Quarto": num_quarto,
+                "Descricao": descricao
             })
         return dados
 
@@ -58,11 +58,11 @@ def alterarQuarto(quarto):
             SET descricao = ?
             WHERE num_quarto = ?
         """, (
-            quarto["Descrição"],
-            quarto["Número do Quarto"]
+            quarto["Descricao"],
+            quarto["Num_Quarto"]
         ))
         conexao.commit()
-        print(f"Quarto {quarto['Número do Quarto']} alterado com sucesso!")
+        print(f"Quarto {quarto['Num_Quarto']} alterado com sucesso!")
     except sqlite3.Error as e:
         print(f"Erro ao alterar quarto: {e}")
     finally:

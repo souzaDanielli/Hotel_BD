@@ -1,7 +1,7 @@
 class Quarto:
     def __init__(self, num_quarto, descricao):
-        self.num_quarto = num_quarto
-        self.descricao = descricao
+        self._num_quarto = num_quarto
+        self._descricao = descricao
 
     # num_quarto
     def get_num_quarto(self):

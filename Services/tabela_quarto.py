@@ -6,7 +6,7 @@ cursor = conexao.cursor()
 cursor.execute(
     """
         CREATE TABLE Quarto (
-            num_quarto INTEGER PRIMARY KEY NOT NULL,
+            num_quarto TEXT PRIMARY KEY NOT NULL,
             descricao TEXT NOT NULL
         );
     """
