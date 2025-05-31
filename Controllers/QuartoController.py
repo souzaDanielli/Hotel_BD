@@ -11,12 +11,11 @@ def incluirQuarto(quarto):
     cursor = conexao.cursor()
     try:
         cursor.execute("""
-            INSERT INTO Quarto (num_quarto, descricao, id_reserva)
+            INSERT INTO Quarto (num_quarto, descricao)
             VALUES (?, ?, ?) 
         """, (
             quarto.get_num_quarto(),
             quarto.get_descricao(),
-            quarto.get_id_reserva()
         ))
         conexao.commit()
         print("Quarto inserido com sucesso!")
@@ -35,12 +34,11 @@ def consultarQuarto():
 
         dados = []
         for item in lista:
-            num_quarto, descricao, id_reserva = item
+            num_quarto, descricao = item
 
             dados.append({
                 "Número do Quarto": num_quarto,
-                "Descrição": descricao,
-                "ID da Reserva": id_reserva
+                "Descrição": descricao
             })
         return dados
 
@@ -57,11 +55,10 @@ def alterarQuarto(quarto):
     try:
         cursor.execute("""
             UPDATE Quarto
-            SET descricao = ?, id_reserva = ?
+            SET descricao = ?
             WHERE num_quarto = ?
         """, (
             quarto["Descrição"],
-            quarto["ID da Reserva"],
             quarto["Número do Quarto"]
         ))
         conexao.commit()
