@@ -10,9 +10,7 @@ cursor.execute(
             data_entrada DATE NOT NULL,
             data_saida DATE NOT NULL,
             cpf_cliente INTEGER NOT NULL,
-            num_quarto INTEGER NOT NULL,
-            FOREIGN KEY (cpf_cliente) REFERENCES Cliente(cpf),
-            FOREIGN KEY (num_quarto) REFERENCES Quarto(num_quarto) 
+            FOREIGN KEY (cpf_cliente) REFERENCES Cliente(cpf)
         );
     """
 )

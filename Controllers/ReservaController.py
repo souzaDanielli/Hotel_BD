@@ -11,13 +11,12 @@ def incluirReserva(reserva):
     cursor = conexao.cursor()
     try:
         cursor.execute("""
-            INSERT INTO Reserva (data_entrada, data_saida, cpf_cliente, num_quarto)
+            INSERT INTO Reserva (data_entrada, data_saida, cpf_cliente)
             VALUES (?, ?, ?, ?) 
         """, (
             reserva.get_data_entrada(),
             reserva.get_data_saida(),
-            reserva.get_cpf_cliente(),
-            reserva.get_num_quarto()
+            reserva.get_cpf_cliente()
         ))
         conexao.commit()
         print("Reserva inserida com sucesso!")
@@ -36,14 +35,13 @@ def consultarReserva():
 
         dados = []
         for item in lista:
-            id, data_entrada, data_saida, cpf_cliente, num_quarto = item
+            id, data_entrada, data_saida, cpf_cliente = item
 
             dados.append({
                 "ID": id,
                 "Data Entrada": data_entrada,
                 "Data Saída": data_saida,
-                "CPF Cliente": cpf_cliente,
-                "Número do Quarto": num_quarto
+                "CPF Cliente": cpf_cliente
             })
         return dados
 
