@@ -85,14 +85,28 @@ def show_reserva_page():
                     reserva.set_num_quarto(st.text_input("num_quarto", value=reserva.get_num_quarto()))
                 #Confirmando alterações (mostrando o que foi inserido anteriormente)
                     if st.form_submit_button("Confirmar Alterações"):
-                        reservaController.alterarReserva({
-                            "id": reserva.get_id(),
-                            "cpf_cliente": reserva.get_cpf_cliente(),
-                            "data_entrada": reserva.get_data_entrada(),
-                            "data_saida": reserva.get_data_saida(),
-                            "num_quarto": reserva.get_num_quarto()
-                        })
-                        st.success("Reserva alterada com sucesso!")
+                        #Verificação se existe o cliente/quarto antes de inserir a reserva
+                        existe_cliente = clienteController.buscarClienteCpf(reserva.get_cpf_cliente())
+                        existe_quarto = quartoController.buscarQuartoNum(reserva.get_num_quarto())
+
+                        if not existe_cliente and not existe_quarto:
+                            st.error("Cliente e Quarto não existem. Cadastre antes!")
+                            return
+                        if not existe_cliente:
+                            st.error("Cliente não existe. Cadastre o cliente antes!")
+                            return
+                        if not existe_quarto:
+                            st.error("Quarto não existe. Cadastre o quarto antes!")
+                            return
+                        else:
+                            reservaController.alterarReserva({
+                                "id": reserva.get_id(),
+                                "cpf_cliente": reserva.get_cpf_cliente(),
+                                "data_entrada": reserva.get_data_entrada(),
+                                "data_saida": reserva.get_data_saida(),
+                                "num_quarto": reserva.get_num_quarto()
+                            })
+                            st.success("Reserva alterada com sucesso!")
             else:
                 st.error("Reserva não encontrada")
         else:
