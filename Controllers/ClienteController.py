@@ -3,7 +3,9 @@ from Models.Cliente import Cliente
 
 # Conectando ao banco de dados
 def conectaBD():
-    return sqlite3.connect("Hotel.db")
+    conexao = sqlite3.connect("Hotel.db")
+    conexao.execute("PRAGMA foreign_keys = ON")
+    return conexao
 
 # Incluindo Cliente
 def incluirCliente(cliente):
@@ -86,5 +88,20 @@ def excluirCliente(cpf):
         print("Cliente excluído com sucesso!")
     except sqlite3.Error as e:
         print(f"Erro ao excluir Cliente: {e}")
+    finally:
+        conexao.close()
+
+
+# Buscar Cliente pelo CPF
+def buscarClienteCpf(cpf):
+    conexao = conectaBD()
+    cursor = conexao.cursor()
+    try:
+        cursor.execute(" SELECT * FROM Cliente WHERE cpf = ?", (cpf,))
+        resultado = cursor.fetchone()
+        return resultado is not None
+    except sqlite3.Error as e:
+        print(f"Erro ao verificar cliente: {e}")
+        return False
     finally:
         conexao.close()

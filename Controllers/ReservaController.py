@@ -3,7 +3,9 @@ from Models.Cliente import Cliente
 
 # Conectando ao banco de dados
 def conectaBD():
-    return sqlite3.connect("Hotel.db")
+    conexao = sqlite3.connect("Hotel.db")
+    conexao.execute("PRAGMA foreign_keys = ON")
+    return conexao
 
 # Incluindo Reserva
 def incluirReserva(reserva):
@@ -11,12 +13,13 @@ def incluirReserva(reserva):
     cursor = conexao.cursor()
     try:
         cursor.execute("""
-            INSERT INTO Reserva (data_entrada, data_saida, cpf_cliente)
-            VALUES (?, ?, ?) 
+            INSERT INTO Reserva (data_entrada, data_saida, cpf_cliente, num_quarto)
+            VALUES (?, ?, ?, ?) 
         """, (
             reserva.get_data_entrada(),
             reserva.get_data_saida(),
-            reserva.get_cpf_cliente()
+            reserva.get_cpf_cliente(),
+            reserva.get_num_quarto()
         ))
         conexao.commit()
         print("Reserva inserida com sucesso!")
@@ -35,13 +38,14 @@ def consultarReserva():
 
         dados = []
         for item in lista:
-            id, data_entrada, data_saida, cpf_cliente = item
+            id, data_entrada, data_saida, cpf_cliente, num_quarto = item
 
             dados.append({
                 "ID": id,
                 "Data_Entrada": data_entrada,
                 "Data_Saida": data_saida,
-                "CPF_Cliente": cpf_cliente
+                "CPF_Cliente": cpf_cliente,
+                "Num_Quarto": num_quarto
             })
         return dados
 
@@ -58,12 +62,13 @@ def alterarReserva(reserva):
     try:
         cursor.execute("""
             UPDATE Reserva
-            SET data_entrada = ?, data_saida = ?, cpf_cliente = ?
+            SET data_entrada = ?, data_saida = ?, cpf_cliente = ?, num_quarto = ?
             WHERE id = ?
         """, (
             reserva["data_entrada"],
             reserva["data_saida"],
             reserva["cpf_cliente"],
+            reserva["num_quarto"],
             reserva["id"]
         ))
         conexao.commit()

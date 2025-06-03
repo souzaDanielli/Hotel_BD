@@ -3,7 +3,9 @@ from Models.Quarto import Quarto
 
 # Conectando ao banco de dados
 def conectaBD():
-    return sqlite3.connect("Hotel.db")
+    conexao = sqlite3.connect("Hotel.db")
+    conexao.execute("PRAGMA foreign_keys = ON")
+    return conexao
 
 # Incluir Quarto
 def incluirQuarto(quarto):
@@ -78,5 +80,19 @@ def excluirQuarto(num_quarto):
         print(f"Quarto {num_quarto} excluído com sucesso!")
     except sqlite3.Error as e:
         print(f"Erro ao excluir quarto: {e}")
+    finally:
+        conexao.close()
+
+# Buscar Quarto pelo número
+def buscarQuartoNum(num_quarto):
+    conexao = conectaBD()
+    cursor = conexao.cursor()
+    try:
+        cursor.execute("SELECT * FROM Quarto WHERE num_quarto = ?", (num_quarto,))
+        resultado = cursor.fetchone()
+        return resultado is not None
+    except sqlite3.Error as e:
+        print(f"Erro ao verificar quarto: {e}")
+        return False
     finally:
         conexao.close()

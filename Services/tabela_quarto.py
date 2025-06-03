@@ -1,6 +1,7 @@
 import sqlite3
 
 conexao = sqlite3.connect("Hotel.db")
+conexao.execute("PRAGMA foreign_keys = ON")
 cursor = conexao.cursor()
 
 cursor.execute(

@@ -1,9 +1,10 @@
 class Reserva:
-    def __init__(self, id, data_entrada, data_saida, cpf_cliente):
+    def __init__(self, id, data_entrada, data_saida, cpf_cliente, num_quarto):
         self._id = id
         self._data_entrada = data_entrada
         self._data_saida = data_saida
         self._cpf_cliente = cpf_cliente
+        self._num_quarto = num_quarto
 
     # id
     def get_id(self):
@@ -28,3 +29,9 @@ class Reserva:
         return self._cpf_cliente
     def set_cpf_cliente(self,cpf_cliente):
         self._cpf_cliente = cpf_cliente
+
+    # número do quarto
+    def get_num_quarto(self):
+        return self._num_quarto
+    def set_num_quarto(self, num_quarto):
+        self._num_quarto = num_quarto
