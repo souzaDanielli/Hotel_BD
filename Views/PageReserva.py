@@ -9,13 +9,14 @@ import Controllers.ClienteController as clienteController
 import Controllers.QuartoController as quartoController
 
 def show_reserva_page():
-    st.title('Cadastro de Reservas')
+    st.title('📋 Cadastro de Reservas')
 
-    # Menu de operações para Quarto
+    # Menu de operações para Reserva
     Page_Reserva = st.sidebar.selectbox("Operações", ["Incluir", "Consultar", "Excluir", "Alterar"])
 
     # Incluir Reserva
     if Page_Reserva == "Incluir":
+        st.subheader("➕ Incluir Nova Reserva")
         reserva = Reserva(0, "", "", "", "")
 
         reserva.set_data_entrada(st.date_input("Data de Entrada: "))
@@ -37,28 +38,44 @@ def show_reserva_page():
     
     # Consultar Reserva
     elif Page_Reserva == "Consultar":
-        if st.button("Consultar"):
+        st.subheader("📋 Lista de Reservas")
+        opcao_consulta = st.sidebar.selectbox("Escolha o tipo de consulta:", ["Listagem Simples","Reservas por Cliente","Reservas Detalhadas"])
+        # Consulta com SELECT
+        if opcao_consulta == "Listagem Simples":
             dados = reservaController.consultarReserva()
             if dados:
                 dado = pd.DataFrame(dados)
                 st.dataframe(dado)
             else:
                 st.info("Nenhuma Reserva cadastrado")
+        # Consulta com WHERE - Procura todas as reservas do Cliente com CPF
+        elif opcao_consulta == "Reservas por Cliente":
+            cpf = st.text_input("Digite o CPF do Cliente")
+            if st.button("Inserir"):
+                dados = reservaController.consultarReservaPorCliente(cpf)
+                if dados:
+                    st.table(pd.DataFrame(dados))
+                else:
+                    st.warning(f"Nenhuma Reserva encontrada nesse CPF {cpf}")
+        # Consulta com INNERJOIN - Junta todos os dados de cliente + quarto com as reservas
+        # elif opcao_consulta == "Reservas Detalhadas":
+        #     dados = 
 
     # Excluir Reserva
     elif Page_Reserva == "Excluir":
+        st.subheader("❌ Excluir Reserva")
         dados = reservaController.consultarReserva()
         if dados:
             id_para_excluir = st.text_input("ID da reserva para excluir")
             if st.button("Excluir"):
                 reservaController.excluirReserva(id_para_excluir)
                 st.success("Reserva excluída com sucesso!")
-                
-            else:
-                st.info("Nenhuma reserva cadastrada")
+        else:
+            st.info("Nenhuma reserva cadastrada")
 
     # Alterar reserva
     elif Page_Reserva == "Alterar":
+        st.subheader("✏️ Alterar Reserva")
         dados = reservaController.consultarReserva()
         if dados:
             st.table(pd.DataFrame(dados))

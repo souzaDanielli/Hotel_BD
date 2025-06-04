@@ -4,13 +4,14 @@ import Controllers.QuartoController as quartoController
 from Models.Quarto import Quarto
 
 def show_quarto_page():
-    st.title('Cadastro de Quartos')
+    st.title('📋Cadastro de Quartos')
 
     # Menu de operações para Quarto
     Page_Quarto = st.sidebar.selectbox("Operações", ["Incluir", "Consultar", "Excluir", "Alterar"])
 
     # Incluir Quarto
     if Page_Quarto == "Incluir":
+        st.subheader("➕ Incluir Novo Quarto")
         quarto = Quarto(0, "")
 
         quarto.set_num_quarto(st.text_input("Número do Quarto: "))
@@ -22,6 +23,7 @@ def show_quarto_page():
     
     # Consultar Quarto
     elif Page_Quarto == "Consultar":
+        st.subheader("📋 Lista de Quartos")
         if st.button("Consultar"):
             dados = quartoController.consultarQuarto()
             if dados:
@@ -32,6 +34,7 @@ def show_quarto_page():
 
     # Excluir Quarto
     elif Page_Quarto == "Excluir":
+        st.subheader("❌ Excluir Quartos")
         dados = quartoController.consultarQuarto()
         if dados:
             st.table(pd.DataFrame(dados))
@@ -45,12 +48,12 @@ def show_quarto_page():
 
     # Alterar quarto
     elif Page_Quarto == "Alterar":
+        st.subheader("✏️ Alterar Reserva")
         dados = quartoController.consultarQuarto()
         if dados:
             st.table(pd.DataFrame(dados))
             num_quarto = st.text_input("Número do quarto para alterar")
             quarto_data = next((c for c in dados if str(c["Num_Quarto"]).strip() == str(num_quarto).strip()), None)
-
 
             if quarto_data:
                 quarto = Quarto(

@@ -4,13 +4,14 @@ import Controllers.ClienteController as clienteController
 from Models.Cliente import Cliente
 
 def show_cliente_page():
-    st.title('Cadastro de Clientes')
+    st.title('📋Cadastro de Clientes')
 
     # Menu de operações para Cliente
     Page_Cliente = st.sidebar.selectbox("Operações", ["Incluir", "Consultar", "Excluir", "Alterar"])
 
     # Incluir cliente
     if Page_Cliente == "Incluir":
+        st.subheader("➕ Incluir Novo Cliente")
         cliente = Cliente(0, "", "", "", "")
 
         cliente.set_cpf(st.text_input("CPF: "))
@@ -25,6 +26,7 @@ def show_cliente_page():
 
     # Consultar cliente
     elif Page_Cliente == "Consultar":
+        st.subheader("📋 Lista de Clientes")
         if st.button("Consultar"):
             dados = clienteController.consultarCliente()
             if dados:
@@ -35,6 +37,7 @@ def show_cliente_page():
 
     # Excluir cliente
     elif Page_Cliente == "Excluir":
+        st.subheader("❌ Excluir Cliente")
         dados = clienteController.consultarCliente()
         if dados:
             st.table(pd.DataFrame(dados))
@@ -48,6 +51,7 @@ def show_cliente_page():
     
     # Alterar cliente
     elif Page_Cliente == "Alterar":
+        st.subheader("✏️ Alterar Cliente")
         dados = clienteController.consultarCliente()
         if dados:
             st.table(pd.DataFrame(dados))
