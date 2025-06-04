@@ -32,11 +32,11 @@ def show_servico_page():
                 st.warning("A descrição não pode estar vazia.")
             else:
                 funcionarios = funcionarioController.consultarFuncionarios()
-                clientes = clienteController.consultarClientes()
-                quartos = quartoController.consultarQuartos()
+                clientes = clienteController.buscarClienteCpf()
+                quartos = quartoController.buscarQuartoNum()
 
                 funcionario_existe = any(f.get_cpf() == id_funcionario for f in funcionarios)
-                cliente_existe = any(c.get_cpf() == id_cliente for c in clientes)
+                cliente_existe = any(c.get_cpf_cliente() == id_cliente for c in clientes)
                 quarto_existe = any(q.get_num_quarto() == id_quarto for q in quartos)
 
                 if not funcionario_existe:

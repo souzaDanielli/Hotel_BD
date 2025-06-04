@@ -11,7 +11,7 @@ sys.path.append(str(Path(__file__).parent))
 
 # Dicionário de páginas disponíveis
 PAGES = {
-    "Cliente": "Views.PageCliente","Quarto": "Views.PageQuarto", "Reserva": "Views.PageReserva"
+    "Cliente": "Views.PageCliente","Quarto": "Views.PageQuarto", "Reserva": "Views.PageReserva", "Funcionario": "Views.PageFuncionario", "Servico": "Views.PageServico"
     }
 
 # Carregar página
