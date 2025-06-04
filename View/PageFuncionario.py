@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import Controllers.FuncionarioController as funcionarioController
 from Models.Funcionario import Funcionario
-from datetime import date
+from datetime import date, datetime
 
 def show_funcionario_page():
     st.title('📋 Cadastro de Funcionários')
@@ -13,7 +13,7 @@ def show_funcionario_page():
         st.subheader("➕ Incluir Novo Funcionário")
         col1, col2 = st.columns(2)
         with col1:
-            cpf = st.number_input("CPF:", min_value=0, step=1, format="%d")
+            cpf = st.text_input("CPF:")
             nome = st.text_input("Nome:")
             telefone = st.text_input("Telefone:")
         with col2:
@@ -23,6 +23,12 @@ def show_funcionario_page():
         if st.button("Salvar"):
             if not nome.strip():
                 st.warning("Nome não pode estar vazio.")
+            elif not cpf.strip():
+                st.warning("CPF não pode estar vazio.")
+            elif not telefone.strip():
+                st.warning("Telefone não pode estar vazio.")
+            elif data_nascimento > date.today():
+                st.warning("Data de nascimento não pode ser futura.")
             else:
                 funcionario = Funcionario(cpf, nome, telefone, str(data_nascimento), str(data_cadastro))
                 funcionarioController.incluirFuncionario(funcionario)
@@ -35,11 +41,11 @@ def show_funcionario_page():
             data = []
             for func in funcionarios:
                 data.append({
-                    "CPF": func.get_cpf(),
-                    "Nome": func.get_nome(),
-                    "Telefone": func.get_telefone(),  # Corrigido
-                    "Data Nascimento": func.get_data_nascimento(),
-                    "Data Cadastro": func.get_data_cadastro()
+                    "CPF": func.get_cpf() or "",
+                    "Nome": func.get_nome() or "",
+                    "Telefone": func.get_telefone() or "",
+                    "Data Nascimento": func.get_data_nascimento() or "",
+                    "Data Cadastro": func.get_data_cadastro() or ""
                 })
             df = pd.DataFrame(data)
             st.dataframe(df)
@@ -48,13 +54,26 @@ def show_funcionario_page():
 
     elif operacao == "Excluir":
         st.subheader("❌ Excluir Funcionário")
-        cpf_excluir = st.number_input("CPF do funcionário a excluir:", min_value=0, step=1, format="%d")
+        cpf_excluir = st.text_input("CPF do funcionário a excluir:")
+
         if st.button("Excluir"):
-            funcionarioController.excluirFuncionario(cpf_excluir)
-            st.success(f"Funcionário com CPF {cpf_excluir} excluído!")
+            if not cpf_excluir.strip():
+                st.warning("Por favor, informe um CPF.")
+            else:
+                funcionarios = funcionarioController.consultarFuncionarios()
+                existe = any(func.get_cpf() == cpf_excluir for func in funcionarios)
+
+                if existe:
+                    sucesso = funcionarioController.excluirFuncionario(cpf_excluir)
+                    if sucesso:
+                        st.success(f"Funcionário com CPF {cpf_excluir} excluído com sucesso!")
+                    else:
+                        st.error("Erro ao tentar excluir o funcionário.")
+                else:
+                    st.error(f"Nenhum funcionário encontrado com o CPF: {cpf_excluir}")
 
     elif operacao == "Alterar":
-        st.subheader("✏️ Alterar Funcionário")
+        st.subheader("✏ Alterar Funcionário")
         funcionarios = funcionarioController.consultarFuncionarios()
         if funcionarios:
             opcoes = {func.get_cpf(): func.get_nome() for func in funcionarios}
@@ -63,17 +82,31 @@ def show_funcionario_page():
             funcionario_selecionado = next((f for f in funcionarios if f.get_cpf() == codigo_alterar), None)
 
             if funcionario_selecionado:
+                try:
+                    data_nasc = datetime.strptime(funcionario_selecionado.get_data_nascimento(), "%Y-%m-%d").date()
+                    data_cad = datetime.strptime(funcionario_selecionado.get_data_cadastro(), "%Y-%m-%d").date()
+                except:
+                    data_nasc = date.today()
+                    data_cad = date.today()
+
                 novo_nome = st.text_input("Novo Nome:", value=funcionario_selecionado.get_nome())
                 novo_telefone = st.text_input("Novo Telefone:", value=funcionario_selecionado.get_telefone())
-                nova_data_nascimento = st.date_input("Nova Data de Nascimento:", value=pd.to_datetime(funcionario_selecionado.get_data_nascimento()))
-                nova_data_cadastro = st.date_input("Nova Data de Cadastro:", value=pd.to_datetime(funcionario_selecionado.get_data_cadastro()))
+                nova_data_nascimento = st.date_input("Nova Data de Nascimento:", value=data_nasc)
+                nova_data_cadastro = st.date_input("Nova Data de Cadastro:", value=data_cad)
 
                 if st.button("Atualizar"):
-                    funcionario_atualizado = Funcionario(
-                        codigo_alterar, novo_nome, novo_telefone,
-                        str(nova_data_nascimento), str(nova_data_cadastro)
-                    )
-                    funcionarioController.alterarFuncionario(funcionario_atualizado)
-                    st.success(f"Funcionário {novo_nome} atualizado com sucesso!")
+                    if not novo_nome.strip():
+                        st.warning("Nome não pode estar vazio.")
+                    elif not novo_telefone.strip():
+                        st.warning("Telefone não pode estar vazio.")
+                    elif nova_data_nascimento > date.today():
+                        st.warning("Data de nascimento não pode ser futura.")
+                    else:
+                        funcionario_atualizado = Funcionario(
+                            codigo_alterar, novo_nome, novo_telefone,
+                            str(nova_data_nascimento), str(nova_data_cadastro)
+                        )
+                        funcionarioController.alterarFuncionario(funcionario_atualizado)
+                        st.success(f"Funcionário {novo_nome} atualizado com sucesso!")
         else:
             st.info("Nenhum funcionário cadastrado para alterar.")

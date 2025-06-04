@@ -7,14 +7,14 @@ cursor = conexao.cursor()
 
 cursor.execute("""
     CREATE TABLE IF NOT EXISTS servico (
-        id INTEGER PRIMARY KEY,
+        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         descricao TEXT NOT NULL,
-        id_funcionario INTEGER NOT NULL,
-        id_cliente INTEGER NOT NULL,
-        id_quarto INTEGER NOT NULL,
+        id_funcionario TEXT NOT NULL,
+        id_cliente TEXT NOT NULL,
+        id_quarto TEXT NOT NULL,
         FOREIGN KEY (id_funcionario) REFERENCES funcionario(cpf),
         FOREIGN KEY (id_cliente) REFERENCES cliente(cpf),
-        FOREIGN KEY (id_quarto) REFERENCES quarto(n_quarto)
+        FOREIGN KEY (id_quarto) REFERENCES quarto(num_quarto)
     )""")
 
 conexao.commit()

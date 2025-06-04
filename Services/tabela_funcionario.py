@@ -8,11 +8,11 @@ cursor = conexao.cursor()
 cursor.execute(
     """
         CREATE TABLE IF NOT EXISTS funcionario (
-            cpf INTEGER PRIMARY KEY,
+            cpf TEXT NOT NULL PRIMARY KEY,
             nome TEXT NOT NULL,
-            telefone TEXT,
-            data_nascimento DATE,
-            data_cadastro DATE
+            telefone TEXT NOT NULL,
+            data_nascimento DATE NOT NULL,
+            data_cadastro DATE NOT NULL
         );
     """
 )
