@@ -1,5 +1,5 @@
 class Servico:
-    def __init__(self, id, id_funcionario, descricao, id_cliente, id_quarto):
+    def _init_(self, id, id_funcionario, descricao, id_cliente, id_quarto):
         self._id = id
         self._id_funcionario = id_funcionario
         self._descricao = descricao
@@ -35,4 +35,4 @@ class Servico:
         return self._id_quarto
 
     def set_id_quarto(self, id_quarto):
-        self._id_quarto = id_quarto
+        self._id_quarto=id_quarto

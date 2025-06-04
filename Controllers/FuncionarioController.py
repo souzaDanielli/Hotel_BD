@@ -53,9 +53,15 @@ def excluirFuncionario(cpf):
     try:
         cursor.execute("DELETE FROM funcionario WHERE cpf = ?", (cpf,))
         conexao.commit()
-        print(f"Funcionário com cpf {cpf} excluído com sucesso!")
+        if cursor.rowcount > 0:
+            print(f"Funcionário com CPF {cpf} excluído com sucesso!")
+            return True
+        else:
+            print(f"Nenhum funcionário encontrado com o CPF {cpf}.")
+            return False
     except sqlite3.Error as e:
         print(f"Erro ao excluir funcionário: {e}")
+        return False
     finally:
         conexao.close()
 
@@ -75,7 +81,7 @@ def alterarFuncionario(funcionario):
             funcionario.get_cpf()
         ))
         conexao.commit()
-        print(f"Funcionário com cpf {funcionario.get_cpf()} alterado com sucesso!")
+        print(f"Funcionário com CPF {funcionario.get_cpf()} alterado com sucesso!")
     except sqlite3.Error as e:
         print(f"Erro ao alterar funcionário: {e}")
     finally:

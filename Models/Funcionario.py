@@ -1,5 +1,5 @@
 class Funcionario:
-    def __init__(self, cpf, nome, telefone, data_nascimento, data_cadastro):
+    def _init_(self, cpf, nome, telefone, data_nascimento, data_cadastro):
         self._cpf = cpf
         self._nome = nome
         self._telefone = telefone
@@ -35,6 +35,4 @@ class Funcionario:
         return self._data_cadastro
 
     def set_data_cadastro(self, data_cadastro):
-        self._data_cadastro = data_cadastro
-
-
+        self._data_cadastro=data_cadastro
