@@ -13,8 +13,8 @@ cursor.execute("""
         id_cliente TEXT NOT NULL,
         id_quarto TEXT NOT NULL,
         FOREIGN KEY (id_funcionario) REFERENCES funcionario(cpf),
-        FOREIGN KEY (id_cliente) REFERENCES cliente(cpf),
-        FOREIGN KEY (id_quarto) REFERENCES quarto(num_quarto)
+        FOREIGN KEY (id_cliente) REFERENCES Cliente(cpf),
+        FOREIGN KEY (id_quarto) REFERENCES Quarto(num_quarto)
     )""")
 
 conexao.commit()

@@ -86,3 +86,17 @@ def alterarFuncionario(funcionario):
         print(f"Erro ao alterar funcionário: {e}")
     finally:
         conexao.close()
+
+
+def buscarFuncionarioCpf(cpf):
+    conexao = sqlite3.connect("Hotel.db")
+    try:
+        cursor = conexao.cursor()
+        cursor.execute("SELECT * FROM funcionario WHERE cpf = ?", (cpf,))
+        resultado = cursor.fetchone()
+        return resultado is not None
+    except sqlite3.Error as e:
+        print(f"Erro ao verificar funcionário: {e}")
+        return False
+    finally:
+        conexao.close()
