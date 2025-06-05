@@ -91,3 +91,64 @@ def excluirReserva(id):
     finally:
         conexao.close()
 
+def buscarReservasPorCpf(cpf):
+    conexao = conectaBD()
+    cursor = conexao.cursor()
+    try:
+        cursor.execute("SELECT * FROM Reserva WHERE cpf_cliente = ?", (cpf,))
+        lista = cursor.fetchall()
+
+        dados = []
+        for item in lista:
+            id, data_entrada, data_saida, cpf_cliente, num_quarto = item
+            dados.append({
+                "ID": id,
+                "Data_Entrada": data_entrada,
+                "Data_Saida": data_saida,
+                "CPF_Cliente": cpf_cliente,
+                "Num_Quarto": num_quarto
+            })
+        return dados
+    except sqlite3.Error as e:
+        print(f"Erro ao buscar reservas: {e}")
+        return []
+    finally:
+        conexao.close()
+
+def buscarReservasCompletas():
+    conexao = conectaBD()
+    cursor = conexao.cursor()
+    try:
+        cursor.execute("""
+            SELECT 
+                R.id,
+                C.nome AS nome_cliente,
+                C.cpf AS cpf_cliente,
+                R.data_entrada,
+                R.data_saida,
+                Q.num_quarto,
+                Q.descricao
+            FROM Reserva R
+            INNER JOIN Cliente C ON R.cpf_cliente = C.cpf
+            INNER JOIN Quarto Q ON R.num_quarto = Q.num_quarto;
+        """)
+        lista = cursor.fetchall()
+
+        dados = []
+        for item in lista:
+            id, nome_cliente, cpf_cliente, data_entrada, data_saida, num_quarto, descricao = item
+            dados.append({
+                "ID": id,
+                "Nome_Cliente": nome_cliente,
+                "CPF_Cliente": cpf_cliente,
+                "Data_Entrada": data_entrada,
+                "Data_Saida": data_saida,
+                "Num_Quarto": num_quarto,
+                "Descricao": descricao
+            })
+        return dados
+    except sqlite3.Error as e:
+        print(f"Erro ao buscar reservas completas: {e}")
+        return []
+    finally:
+        conexao.close()

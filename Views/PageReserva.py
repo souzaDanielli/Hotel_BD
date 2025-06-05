@@ -47,19 +47,25 @@ def show_reserva_page():
                 dado = pd.DataFrame(dados)
                 st.dataframe(dado)
             else:
-                st.info("Nenhuma Reserva cadastrado")
+                st.info("Nenhuma Reserva cadastrada")
         # Consulta com WHERE - Procura todas as reservas do Cliente com CPF
         elif opcao_consulta == "Reservas por Cliente":
             cpf = st.text_input("Digite o CPF do Cliente")
+
             if st.button("Inserir"):
-                dados = reservaController.consultarReservaPorCliente(cpf)
+                dados = reservaController.buscarReservasPorCpf(cpf)
                 if dados:
                     st.table(pd.DataFrame(dados))
                 else:
                     st.warning(f"Nenhuma Reserva encontrada nesse CPF {cpf}")
         # Consulta com INNERJOIN - Junta todos os dados de cliente + quarto com as reservas
-        # elif opcao_consulta == "Reservas Detalhadas":
-        #     dados = 
+        elif opcao_consulta == "Reservas Detalhadas":
+            dados =  reservaController.buscarReservasCompletas()
+            if dados:
+                dado = pd.DataFrame(dados)
+                st.dataframe(dado)
+            else:
+                st.info("Nenhuma Reserva cadastrada")
 
     # Excluir Reserva
     elif Page_Reserva == "Excluir":
