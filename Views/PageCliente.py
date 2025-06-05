@@ -27,13 +27,13 @@ def show_cliente_page():
     # Consultar cliente
     elif Page_Cliente == "Consultar":
         st.subheader("📋 Lista de Clientes")
-        if st.button("Consultar"):
-            dados = clienteController.consultarCliente()
-            if dados:
-                dado = pd.DataFrame(dados, columns=["CPF", "Nome", "DataNascimento", "Cidade", "Telefone"])
-                st.dataframe(dado)
-            else:
-                st.info("Nenhum cliente cadastrado")
+
+        dados = clienteController.consultarCliente()
+        if dados:
+            dado = pd.DataFrame(dados, columns=["CPF", "Nome", "DataNascimento", "Cidade", "Telefone"])
+            st.dataframe(dado)
+        else:
+            st.info("Nenhum cliente cadastrado")
 
     # Excluir cliente
     elif Page_Cliente == "Excluir":
@@ -52,10 +52,11 @@ def show_cliente_page():
     # Alterar cliente
     elif Page_Cliente == "Alterar":
         st.subheader("✏️ Alterar Cliente")
-        dados = clienteController.consultarCliente()
 
+        dados = clienteController.consultarCliente()
         if dados:
             codigo_cpf = st.text_input("CPF do cliente para alterar")
+            
             if st.button("Buscar"):
                 cliente_data = next((c for c in dados if c["CPF"] == codigo_cpf), None)
 

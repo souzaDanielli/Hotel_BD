@@ -73,36 +73,47 @@ def show_reserva_page():
         else:
             st.info("Nenhuma reserva cadastrada")
 
-    # Alterar reserva
     elif Page_Reserva == "Alterar":
         st.subheader("✏️ Alterar Reserva")
+
         dados = reservaController.consultarReserva()
+        reserva_dados = None
+
         if dados:
-            st.table(pd.DataFrame(dados))
             id = st.text_input("ID da Reserva para alterar")
-            reserva_data = next((c for c in dados if str(c["ID"]).strip() == str(id).strip()), None)
-            
-            if reserva_data:
-                data_entrada = datetime.strptime(reserva_data["Data_Entrada"], "%Y-%m-%d").date()
-                data_saida = datetime.strptime(reserva_data["Data_Saida"], "%Y-%m-%d").date()
+
+            if st.button("Buscar"):
+                # Procura a reserva pelo ID informado
+                reserva_dados = next((c for c in dados if str(c["ID"]).strip() == str(id).strip()),None)
+
+                if reserva_dados:
+                    st.session_state.reserva_selecionada = reserva_dados
+                else:
+                    st.error("Reserva não encontrada")
+                    st.session_state.reserva_selecionada = None
+            # Recupera os dados armazenados no session_state, se houver
+            reserva_dados = st.session_state.get("reserva_selecionada", None)
+            # Se encontrou a reserva, exibe o formulário de alteração
+            if reserva_dados:
+                data_entrada = datetime.strptime(reserva_dados["Data_Entrada"], "%Y-%m-%d").date()
+                data_saida = datetime.strptime(reserva_dados["Data_Saida"], "%Y-%m-%d").date()
 
                 reserva = Reserva(
-                    reserva_data["ID"],
+                    reserva_dados["ID"],
                     data_entrada,
                     data_saida,
-                    reserva_data["CPF_Cliente"],
-                    reserva_data["Num_Quarto"]
-                    
+                    reserva_dados["CPF_Cliente"],
+                    reserva_dados["Num_Quarto"]
                 )
-                #Alterando a reserva
+                # Formulário para alterar os dados da reserva
                 with st.form(key="alteraReserva"):
-                    reserva.set_cpf_cliente(st.text_input("cpf_cliente", value=reserva.get_cpf_cliente()))
-                    reserva.set_data_entrada(st.date_input("data_entrada", value=reserva.get_data_entrada()))
-                    reserva.set_data_saida(st.date_input("data_saida", value=reserva.get_data_saida()))
-                    reserva.set_num_quarto(st.text_input("num_quarto", value=reserva.get_num_quarto()))
-                #Confirmando alterações (mostrando o que foi inserido anteriormente)
+                    reserva.set_cpf_cliente(st.text_input("CPF do Cliente", value=reserva.get_cpf_cliente()))
+                    reserva.set_data_entrada(st.date_input("Data de Entrada", value=reserva.get_data_entrada()))
+                    reserva.set_data_saida(st.date_input("Data de Saída", value=reserva.get_data_saida()))
+                    reserva.set_num_quarto(st.text_input("Número do Quarto", value=reserva.get_num_quarto()))
+
                     if st.form_submit_button("Confirmar Alterações"):
-                        #Verificação se existe o cliente/quarto antes de inserir a reserva
+                        # Verifica se cliente e quarto existem
                         existe_cliente = clienteController.buscarClienteCpf(reserva.get_cpf_cliente())
                         existe_quarto = quartoController.buscarQuartoNum(reserva.get_num_quarto())
 
@@ -115,16 +126,18 @@ def show_reserva_page():
                         if not existe_quarto:
                             st.error("Quarto não existe. Cadastre o quarto antes!")
                             return
-                        else:
-                            reservaController.alterarReserva({
-                                "id": reserva.get_id(),
-                                "cpf_cliente": reserva.get_cpf_cliente(),
-                                "data_entrada": reserva.get_data_entrada(),
-                                "data_saida": reserva.get_data_saida(),
-                                "num_quarto": reserva.get_num_quarto()
-                            })
-                            st.success("Reserva alterada com sucesso!")
-            else:
-                st.error("Reserva não encontrada")
+
+                        # Faz a alteração
+                        reservaController.alterarReserva({
+                            "id": reserva.get_id(),
+                            "cpf_cliente": reserva.get_cpf_cliente(),
+                            "data_entrada": reserva.get_data_entrada(),
+                            "data_saida": reserva.get_data_saida(),
+                            "num_quarto": reserva.get_num_quarto()
+                        })
+                        st.success("Reserva alterada com sucesso!")
+
+                        # Limpa o session_state após a alteração
+                        del st.session_state.reserva_selecionada
         else:
             st.info("Nenhuma reserva cadastrada")

@@ -24,13 +24,13 @@ def show_quarto_page():
     # Consultar Quarto
     elif Page_Quarto == "Consultar":
         st.subheader("📋 Lista de Quartos")
-        if st.button("Consultar"):
-            dados = quartoController.consultarQuarto()
-            if dados:
-                dado = pd.DataFrame(dados, columns=["Num_Quarto", "Descricao"])
-                st.dataframe(dado)
-            else:
-                st.info("Nenhum quarto cadastrado")
+
+        dados = quartoController.consultarQuarto()
+        if dados:
+            dado = pd.DataFrame(dados, columns=["Num_Quarto", "Descricao"])
+            st.dataframe(dado)
+        else:
+            st.info("Nenhum quarto cadastrado")
 
     # Excluir Quarto
     elif Page_Quarto == "Excluir":
