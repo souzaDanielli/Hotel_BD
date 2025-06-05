@@ -38,9 +38,9 @@ def show_cliente_page():
     # Excluir cliente
     elif Page_Cliente == "Excluir":
         st.subheader("❌ Excluir Cliente")
+
         dados = clienteController.consultarCliente()
         if dados:
-            # st.table(pd.DataFrame(dados))
             codigo_cpf = st.text_input("CPF do cliente para excluir")
             
             if st.button("Excluir"):
@@ -67,7 +67,7 @@ def show_cliente_page():
                     st.session_state.cliente_selecionado = None
             # Busca o cliente selecionado no session_state, se existir
             cliente_data = st.session_state.get("cliente_selecionado", None)
-        # Referente a alteração de dados
+        # Se encontrou o quarto, exibe o formulário de alteração
         if cliente_data:
             cliente = Cliente(
                 cliente_data["CPF"],
@@ -76,7 +76,7 @@ def show_cliente_page():
                 cliente_data["Cidade"],
                 cliente_data["Telefone"]
             )
-
+            # Formulário para alterar os dados do quarto
             with st.form(key="alteraCliente"):
                 cliente.set_cpf(st.text_input("CPF", value=cliente.get_cpf()))
                 cliente.set_nome(st.text_input("Nome", value=cliente.get_nome()))
