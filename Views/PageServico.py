@@ -31,13 +31,9 @@ def show_servico_page():
             elif descricao.strip() == "":
                 st.warning("A descrição não pode estar vazia.")
             else:
-                funcionarios = funcionarioController.consultarFuncionarios()
-                clientes = clienteController.buscarClienteCpf()
-                quartos = quartoController.buscarQuartoNum()
-
-                funcionario_existe = any(f.get_cpf() == id_funcionario for f in funcionarios)
-                cliente_existe = any(c.get_cpf_cliente() == id_cliente for c in clientes)
-                quarto_existe = any(q.get_num_quarto() == id_quarto for q in quartos)
+                funcionario_existe = funcionarioController.buscarFuncionarioCpf(id_funcionario)
+                cliente_existe = clienteController.buscarClienteCpf(id_cliente)
+                quarto_existe = quartoController.buscarQuartoNum(id_quarto)
 
                 if not funcionario_existe:
                     st.error("Funcionário não cadastrado no sistema.")
@@ -68,18 +64,19 @@ def show_servico_page():
 
     elif operacao == "Excluir":
         st.subheader("❌ Excluir Serviço")
-        id_excluir = st.text_input("ID do serviço a excluir:")
-        if st.button("Excluir"):
-            servicos = servicoController.consultarServicos()
-            existe = any(s.get_id() == id_excluir for s in servicos)
-            if existe:
+        servicos = servicoController.consultarServicos()
+        if servicos:
+            opcoes = {s.get_id(): f"Funcionário: {s.get_id_funcionario()} - Quarto: {s.get_id_quarto()}" for s in servicos}
+            id_excluir = st.selectbox("Selecione o serviço a excluir:", options=list(opcoes.keys()),
+                                      format_func=lambda x: f"ID {x} - {opcoes[x]}")
+            if st.button("Excluir"):
                 sucesso = servicoController.excluirServico(id_excluir)
                 if sucesso:
                     st.success(f"Serviço com ID {id_excluir} excluído com sucesso!")
                 else:
                     st.error("Erro ao excluir o serviço.")
-            else:
-                st.error("Serviço não encontrado.")
+        else:
+            st.info("Nenhum serviço cadastrado para excluir.")
 
     elif operacao == "Alterar":
         st.subheader("✏ Alterar Serviço")
@@ -106,13 +103,9 @@ def show_servico_page():
                     elif not novo_id_quarto.strip():
                         st.warning("O ID do quarto é obrigatório.")
                     else:
-                        funcionarios = funcionarioController.consultarFuncionarios()
-                        clientes = clienteController.consultarClientes()
-                        quartos = quartoController.consultarQuartos()
-
-                        funcionario_existe = any(f.get_cpf() == novo_id_funcionario for f in funcionarios)
-                        cliente_existe = any(c.get_cpf() == novo_id_cliente for c in clientes)
-                        quarto_existe = any(q.get_num_quarto() == novo_id_quarto for q in quartos)
+                        funcionario_existe = funcionarioController.buscarFuncionarioCpf(novo_id_funcionario)
+                        cliente_existe = clienteController.buscarClienteCpf(novo_id_cliente)
+                        quarto_existe = quartoController.buscarQuartoNum(novo_id_quarto)
 
                         if not funcionario_existe:
                             st.error("Funcionário não cadastrado.")

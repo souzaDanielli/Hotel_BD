@@ -54,23 +54,19 @@ def show_funcionario_page():
 
     elif operacao == "Excluir":
         st.subheader("❌ Excluir Funcionário")
-        cpf_excluir = st.text_input("CPF do funcionário a excluir:")
-
-        if st.button("Excluir"):
-            if not cpf_excluir.strip():
-                st.warning("Por favor, informe um CPF.")
-            else:
-                funcionarios = funcionarioController.consultarFuncionarios()
-                existe = any(func.get_cpf() == cpf_excluir for func in funcionarios)
-
-                if existe:
-                    sucesso = funcionarioController.excluirFuncionario(cpf_excluir)
-                    if sucesso:
-                        st.success(f"Funcionário com CPF {cpf_excluir} excluído com sucesso!")
-                    else:
-                        st.error("Erro ao tentar excluir o funcionário.")
+        funcionarios = funcionarioController.consultarFuncionarios()
+        if funcionarios:
+            opcoes = {func.get_cpf(): func.get_nome() for func in funcionarios}
+            cpf_excluir = st.selectbox("Selecione o funcionário a excluir:", options=list(opcoes.keys()),
+                                      format_func=lambda x: f"{x} - {opcoes[x]}")
+            if st.button("Excluir"):
+                sucesso = funcionarioController.excluirFuncionario(cpf_excluir)
+                if sucesso:
+                    st.success(f"Funcionário com CPF {cpf_excluir} excluído com sucesso!")
                 else:
-                    st.error(f"Nenhum funcionário encontrado com o CPF: {cpf_excluir}")
+                    st.error("Erro ao tentar excluir o funcionário.")
+        else:
+            st.info("Nenhum funcionário cadastrado para excluir.")
 
     elif operacao == "Alterar":
         st.subheader("✏ Alterar Funcionário")
