@@ -30,9 +30,14 @@ def show_funcionario_page():
             elif data_nascimento > date.today():
                 st.warning("Data de nascimento não pode ser futura.")
             else:
-                funcionario = Funcionario(cpf, nome, telefone, str(data_nascimento), str(data_cadastro))
-                funcionarioController.incluirFuncionario(funcionario)
-                st.success("Funcionário cadastrado com sucesso!")
+                # ✅ Verifica se o CPF já existe no banco de dados
+                cpf_existente = funcionarioController.buscarFuncionarioCpf(cpf)
+                if cpf_existente:
+                    st.error(f"Já existe um funcionário cadastrado com o CPF {cpf}.")
+                else:
+                    funcionario = Funcionario(cpf, nome, telefone, str(data_nascimento), str(data_cadastro))
+                    funcionarioController.incluirFuncionario(funcionario)
+                    st.success("Funcionário cadastrado com sucesso!")
 
     elif operacao == "Consultar":
         st.subheader("📋 Lista de Funcionários")
