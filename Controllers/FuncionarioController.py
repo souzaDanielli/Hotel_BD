@@ -8,6 +8,9 @@ def conectaBD():
     return conexao
 
 def incluirFuncionario(funcionario):
+    if buscarFuncionarioCpf(funcionario.get_cpf()):
+        print(f"Erro: CPF {funcionario.get_cpf()} já está cadastrado.")
+        return False  
     conexao = conectaBD()
     cursor = conexao.cursor()
     try:
@@ -23,8 +26,10 @@ def incluirFuncionario(funcionario):
         ))
         conexao.commit()
         print("Funcionário inserido com sucesso!")
+        return True
     except sqlite3.Error as e:
         print(f"Erro ao inserir funcionário: {e}")
+        return False
     finally:
         conexao.close()
 
@@ -86,7 +91,6 @@ def alterarFuncionario(funcionario):
         print(f"Erro ao alterar funcionário: {e}")
     finally:
         conexao.close()
-
 
 def buscarFuncionarioCpf(cpf):
     conexao = sqlite3.connect("Hotel.db")
