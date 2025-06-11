@@ -10,7 +10,7 @@ def conectaBD():
 def incluirFuncionario(funcionario):
     if buscarFuncionarioCpf(funcionario.get_cpf()):
         print(f"Erro: CPF {funcionario.get_cpf()} já está cadastrado.")
-        return False  # CPF já existe
+        return False  
     conexao = conectaBD()
     cursor = conexao.cursor()
     try:
